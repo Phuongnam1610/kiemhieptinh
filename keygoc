@@ -1,0 +1,13 @@
+# license_keys = {
+        #     "yyy": datetime.date(2025, 5, 10),
+        #     "yuj": datetime.date(2025, 6, 6),   # 35 days from May 2
+        #     "yhf": datetime.date(2025, 7, 11),  # 35 days from June 6 
+        #     "yui": datetime.date(2025, 8, 15),  # 35 days from July 11
+        #     "yee": datetime.date(2025, 9, 19),  # 35 days from Aug 15
+        #     "sss": datetime.date(2025, 10, 24), # 35 days from Sept 19
+        #     "ngh": datetime.date(2025, 11, 28), # 35 days from Oct 24
+        #     "csd": datetime.date(2026, 1, 2),   # 35 days from Nov 28
+        #     "iop": datetime.date(2026, 2, 6),   # 35 days from Jan 2
+        #     "fsa": datetime.date(2026, 3, 13),  # 35 days from Feb 6
+        #     "avb": datetime.date(2026, 4, 17)   # 35 days from Mar 13
+        # }

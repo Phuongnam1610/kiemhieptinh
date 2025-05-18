@@ -1,0 +1,13 @@
+license_keys = {
+            "123": datetime.date(2025, 5, 4),
+            "hsr": datetime.date(2025, 6, 8),    # 35 days from May 4
+            "hsư": datetime.date(2025, 7, 13),   # 35 days from June 8
+            "hqư": datetime.date(2025, 8, 17),   # 35 days from July 13
+            "hpư": datetime.date(2025, 9, 21),   # 35 days from Aug 17
+            "hkư": datetime.date(2025, 10, 26),  # 35 days from Sept 21
+            "hns": datetime.date(2025, 11, 30),  # 35 days from Oct 26
+            "hqs": datetime.date(2026, 1, 4),    # 35 days from Nov 30
+            "r8y": datetime.date(2026, 2, 8),    # 35 days from Jan 4
+            "rhj": datetime.date(2026, 3, 15),   # 35 days from Feb 8
+            "asq": datetime.date(2026, 4, 19)    # 35 days from Mar 15
+        }
