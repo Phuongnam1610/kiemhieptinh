@@ -1,8 +1,7 @@
 from adb import *
 import numpy as np
-pkgame="com.tepaylink.kiemhieptinh2mobile"
-pkgame2="com.tepaylink.kiemhieptinh2mobile/org.cocos2dx.cpp.AppActivity"
-
+pkgame="com.blackhole.jx2mobile"
+pkgame2="com.blackhole.jx2mobile/dev.axmol.app.AppActivity"
 
 def cam(img):
     """
