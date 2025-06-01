@@ -1,0 +1,15 @@
+dist/
+build/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# PyInstaller
+*.manifest
+*.spec

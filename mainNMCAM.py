@@ -873,12 +873,12 @@ class toolLQ():
                 continue
             else:
                 time.sleep(10)
-                if (findFor(self.udid, 1, "batdau.png",0 )!= 0):
-                    click(self.udid,100,250,"o 2")
-                    time.sleep(2)
-                    click(self.udid,110,345,"o 3")
-                    time.sleep(1)
-                    click(self.udid,835,249,"bat dau")
+                if (findFor(self.udid, 1, "batdau.png",1 )!= 0):
+                    # click(self.udid,100,250,"o 2")
+                    # time.sleep(2)
+                    # click(self.udid,110,345,"o 3")
+                    # time.sleep(1)
+                    # click(self.udid,835,249,"bat dau")
                     time.sleep(random.randint(20,60)) 
                     findFor(self.udid,1,"roikhoi.png",threshold=0.8)
                     click(self.udid,505,437,"exit")
