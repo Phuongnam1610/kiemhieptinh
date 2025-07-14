@@ -43,19 +43,19 @@ def auth(key):
         #     "ugf": datetime.date(2026, 3, 15),   # 35 days from Feb 8
         #     "qưe": datetime.date(2026, 4, 19)    # 35 days from Mar 15
         # }
-        #CamLogin
+        #banmoi
         license_keys = {
-            "123": datetime.date(2025, 5, 4),
-            "qqq": datetime.date(2025, 6, 8),    # 35 days from May 4
-            "ưgj": datetime.date(2025, 7, 13),   # 35 days from June 8
-            "h54": datetime.date(2025, 8, 17),   # 35 days from July 13
-            "oip": datetime.date(2025, 9, 21),   # 35 days from Aug 17
-            "4th": datetime.date(2025, 10, 26),  # 35 days from Sept 21
-            "vbn": datetime.date(2025, 11, 30),  # 35 days from Oct 26
-            "xzx": datetime.date(2026, 1, 4),    # 35 days from Nov 30
-            "ert": datetime.date(2026, 2, 8),    # 35 days from Jan 4
-            "q23": datetime.date(2026, 3, 15),   # 35 days from Feb 8
-            "poi": datetime.date(2026, 4, 19)    # 35 days from Mar 15
+            "hsr": datetime.date(2025, 7, 13),
+            "qqq": datetime.date(2025, 8, 17),    # 35 days from July 13
+            "ưgj": datetime.date(2025, 9, 21),    # 35 days from Aug 17 
+            "h54": datetime.date(2025, 10, 26),   # 35 days from Sept 21
+            "oip": datetime.date(2025, 11, 30),   # 35 days from Oct 26
+            "4th": datetime.date(2026, 1, 4),     # 35 days from Nov 30
+            "vbn": datetime.date(2026, 2, 8),     # 35 days from Jan 4
+            "xzx": datetime.date(2026, 3, 15),    # 35 days from Feb 8
+            "ert": datetime.date(2026, 4, 19),    # 35 days from Mar 15
+            "q23": datetime.date(2026, 5, 24),    # 35 days from Apr 19
+            "poi": datetime.date(2026, 6, 28)     # 35 days from May 24
         }
         #Cam2
         # license_keys = {
@@ -191,13 +191,17 @@ def click(udid,x,y,Tag="None"):
     print(f"{udid} vua click vao {Tag}")
     command = f"{adb} -s {udid} shell input tap {x} {y}"
     os.system(command)
+    time.sleep(2)
 
 def doubleclick(udid,x,y,Tag="None"):
     print(f"{udid} vua click vao {Tag}")
-    command = f"{adb} -s {udid} shell input tap {x} {y} & {adb} -s {udid} shell input tap {x} {y}"
-    time.sleep(random.randint(1,3))
+    command = f"{adb} -s {udid} shell input tap {x} {y} && {adb} -s {udid} shell input tap {x} {y}"
     os.system(command)
-
+    time.sleep(1)
+def delete(udid):
+    for i in range(3):
+        command = f"adb -s {udid} shell input keyevent KEYCODE_DEL"
+        os.system(command)
 def clickhold(udid,x,y,delay=200):
     command = f"{adb} -s {udid} shell input swipe {x} {y} {x} {y} {delay}"
     os.system(command)

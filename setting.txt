@@ -1,4 +1,4 @@
 .
 adb
-hsr
+qqq
 0.65

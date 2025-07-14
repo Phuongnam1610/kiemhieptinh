@@ -1,7 +1,8 @@
 from adb import *
+from bandoutils import *
 import numpy as np
 pkgame="com.blackhole.jx2mobile"
-pkgame2="com.blackhole.jx2mobile/dev.axmol.app.AppActivity"
+pkgame2="com.blackhole.jx2mobile/org.cocos2dx.cpp.AppActivity"
 
 def cam(img):
     """
@@ -52,7 +53,7 @@ class toolLQ():
                     self.dungdi()
                 if(self.vDL()==True):
                         time.sleep(1)
-                        click(self.udid,814,212,"Thoai")
+                        click(self.udid,723,180,"Thoai")
                         time.sleep(5)
                         if (findFor(self.udid, 1, "hanhtrang.png", 0)!= 0):
                             if(self.bando()==True):
@@ -72,7 +73,7 @@ class toolLQ():
         closeGame(self.udid,pkgame)
         time.sleep(5)
         moGame(self.udid,pkgame2)
-        time.sleep(random.randint(20,60))  # Random sleep between 10-30 seconds
+        time.sleep(random.randint(20,30))  # Random sleep between 10-30 seconds
     
     def dungdi(self):
         time.sleep(5)
@@ -137,15 +138,12 @@ class toolLQ():
     def vDL(self):
         if(self.tatauto()==True):
             for i in range(2):
-                click(self.udid, 856,110 ,"map")
-                time.sleep(5)
-                
-                if (findFor(self.udid, 1, "dichuyen.png", 0)!= 0):
-                    click(self.udid,687,19,"the gioi")
-                    time.sleep(5)
-                    click(self.udid, 238, 401,"dai ly ")
-                    time.sleep(5)
-                    click(self.udid, 575, 310,"chuduocdiem")
+                click(self.udid, 933,69 ,"map")
+                if (findFor(self.udid, 1, "nutx.png", 0)!= 0):
+                    time.sleep(3)
+                    click(self.udid,814,484,"the gioi")
+                    click(self.udid, 413,369,"dai ly ")
+                    click(self.udid, 621, 278,"chuduocdiem")
                     self.dungdi()
                     return True
         
@@ -204,138 +202,106 @@ class toolLQ():
             return False
     def giamdinh(self):
         for i in range(2):
-            click(self.udid,121,90,"giam dinh")
-            time.sleep(5)
-            if (findFor(self.udid, 1, "giamdinh.png",0 ,threshold=0.8)!= 0):
-                
-                for i in range(2):
-                    click(self.udid,787,126,"o so 1")
-                    time.sleep(3)
-                time.sleep(1)
-                listcanxoa1=[26,21,16,11,6,1,2,7,12,17,22,27,28,23,18,13,8,3,4,9,14,19,24,29,30,25,20,15,10,5]        
-                listcx1=self.locdo(listcanxoa1)
-                lrm1=[]
-                for i in (listcx1):
-                    click(self.udid, i[0],i[1] )
-                    time.sleep(1)
-                    click(self.udid, i[0],i[1] )
-                    time.sleep(1)
-                    a=False
-                    sc=screen_capture(self.udid)
-                    if(find2(sc,"yeucau.png", 0,threshold=th)!= 0):
-                        a=True
-                    elif(find2(sc,"xacxuat.png", 0,threshold=th)!= 0):
-                        a=True
-                    elif(find2(sc,"yeucau2.png", 0,threshold=th)!= 0):
-                        a=True
-                    elif(find2(sc,"xacxuat2.png", 0,threshold=th)!= 0):
-                        a=True
-                    if(a==True):
-                       lrm1.append(i)
-                for i in lrm1:
-                    if(i in listcx1 ):
-                        listcx1.remove(i)
-                #sang ô 2
-                for i in range(2):
-                    click(self.udid,786,268,"o so 2")
-                time.sleep(3)
-                listcanxoa2=[16,11,6,1,2,7,12,17,18,13,8,3,4,9,14,19,20,15,10,5]      
-                listcx2=self.locdo(listcanxoa2)
-                lrm1=[]
-                for i in (listcx2):
-                    click(self.udid, i[0],i[1] )
-                    time.sleep(1)
-                    click(self.udid, i[0],i[1] )
-                    time.sleep(1)
-                    a=False
-                    sc=screen_capture(self.udid)
-                    
-                    if(find2(sc,"yeucau.png", 0,threshold=th)!= 0):
-                        a=True
-                    elif(find2(sc,"xacxuat.png", 0,threshold=th)!= 0):
-                        a=True
-                    elif(find2(sc,"yeucau2.png", 0,threshold=th)!= 0):
-                        a=True
-                    elif(find2(sc,"xacxuat2.png", 0,threshold=th)!= 0):
-                        a=True
-                    if(a==True):
-                       lrm1.append(i)
-                for i in lrm1:
-                    if(i in listcx2 ):
-                        listcx2.remove(i)
-                return (listcx1,listcx2)
+            click(self.udid,66,135,"giam dinh")
+            for i in range(2):
+                click(self.udid,829,160,"o so 1")
+            origin_list_o_so_1=getOHasItems(screen_capture(self.udid),1)
+            giu_list_o_so_1=[]
+            for i in (origin_list_o_so_1):
+                click(self.udid, i[1][0],i[1][1] )
+                click(self.udid, i[1][0],i[1][1] )
+                if(self.cogiuonayko()):
+                    giu_list_o_so_1.append(i)
+                click( self.udid,889,362)
+            for i in range(2):
+                click(self.udid,825,340,"o so 2")
+            origin_list_o_so_2=getOHasItems(screen_capture(self.udid),1)
+            giu_list_o_so_2=[]
+            for i in (origin_list_o_so_2):
+                click(self.udid, i[1][0],i[1][1] )
+                click(self.udid, i[1][0],i[1][1] )
+                if(self.cogiuonayko()):
+                    giu_list_o_so_2.append(i)
+                click( self.udid,889,362)
+            return (loc_cac_o_can_bam(giu_list_o_so_1,1),loc_cac_o_can_bam(giu_list_o_so_2,2))
         return False
+    def cogiuonayko(self):
+        sc=screen_capture(self.udid)
+        if(find2(sc,"giudo1.png", 0,threshold=0.8)!= 0):
+            return True
+        if(find2(sc,"giudo2.png", 0,threshold=0.8)!= 0):
+            return True
+        if(find2(sc,"giudo3.png", 0,threshold=0.8)!= 0):
+            return True
+        if(find2(sc,"giudo4.png", 0,threshold=0.8)!= 0):
+            return True
+        if(find2(sc,"giudo5.png", 0,threshold=0.8)!= 0):
+            return True
+        if(find2(sc,"phaohoa.png", 0,threshold=0.8)!= 0):
+            return True
+        if(find2(sc,"xacxuattim.png", 0,threshold=th)!= 0):
+            return True
+        if(find2(sc,"xacxuatxanh.png", 0,threshold=th)!= 0):
+            return True
+
     def suachua(self):
         for i in range(2):
-            click(self.udid,121,189,"sua chua")
-            time.sleep(5)
-            click(self.udid, 30, 37,"avatar")
-            time.sleep(5)
-            click(self.udid, 175,94,"o so 1" )
-            time.sleep(1)
-            findFor(self.udid, 1, "dongy3.png",1,threshold=0.8 )
-            click(self.udid, 185,200,"o so 2" )
-            time.sleep(1)
-            findFor(self.udid, 1, "dongy3.png",1,threshold=0.8 )
-            click(self.udid, 183,387,"o so 3" )
-            time.sleep(1)
-            findFor(self.udid, 1, "dongy3.png",1,threshold=0.8 )
-            time.sleep(1)
-            click(self.udid,476 ,32 ,"x")
+            click(self.udid,68,92,"sua chua")
+            click(self.udid, 36, 25,"avatar")
+            click(self.udid, 60,151,"o so 1" )
+            click(self.udid, 56,191,"o so 2" )
+            click(self.udid, 63,241,"o so 3" )
+            click(self.udid, 59,371,"o so 6" )
+            click(self.udid,12,68,"nutx")
+
             return True
         return False
     def bando(self):
-        listcx=self.giamdinh()
+        listcx=self.giamdinh()#tra ve cac o can bam
         if(listcx==False):
             return False
         if(self.suachua()==False):
             return False
+        click(self.udid, 67,202,"ban nhanh" )
         for i in range(2):
-            click(self.udid, 116,357,"ban nhanh" )
-            time.sleep(5)
-            if (findFor(self.udid, 2, "bannhanh.png", 0)!= 0):
-                for i in range(2):
-                    click(self.udid,787,126,"o so 1")
-                time.sleep(5)
-                for i in (listcx[0]):
-                    click(self.udid, i[0],i[1] )
-                    click(self.udid, i[0],i[1] )
-                for i in range(2):
-                    click(self.udid,786,268,"o so 2")
-                time.sleep(5)
-                for i in (listcx[1]):
-                    click(self.udid, i[0],i[1] )
-                    click(self.udid, i[0],i[1] )
-
-                click(self.udid, 917, 27,"nutx")
+            click(self.udid,829,160,"o so 1")
+        for i in (listcx[0]):
+            click(self.udid, i[0],i[1] )
+            click(self.udid, i[0],i[1] )
+        for i in range(2):
+            click(self.udid,825,340,"o so 2")
+        for i in (listcx[1]):
+            click(self.udid, i[0],i[1] )
+            click(self.udid, i[0],i[1] )
+        self.tatNutX()
+        return True
+    def tatNutX(self):
+        for i in range(5):
+            if (findFor(self.udid, 1, "nutx.png", 1)==0):
                 return True
         return False
-            
+
     def lenbai(self):
         for i in range(2):
-            click(self.udid, 856,110 ,"map")
-            time.sleep(5)
-            if (findFor(self.udid, 1, "dichuyen.png", 0)!= 0):
+            click(self.udid, 933,69 ,"map")
+            if (findFor(self.udid, 1, "nutx.png", 0)!= 0):
                 time.sleep(3)
-                click(self.udid,687,19,"the gioi")
-                time.sleep(10)
-                for i in self.index:
-                    clickTC=True
-                    for a in range(10):
-                        sc=screen_capture(self.udid)
-                        sc1=sc[179:201,347:376]
-                        if(clickTC==True):
-                            click(self.udid,i[0],i[1])
-                        else:
-                            click(self.udid,int(i[0])+random.randint(-5,5),int(i[1])+random.randint(-5,5))
-                        time.sleep(10)
-                        sc2=screen_capture(self.udid)[157:204,318:393]
-                        
-                        if(find3(sc2,sc1,threshold=0.8)!=0):
-                            clickTC=False
-                        else:
-                            clickTC=True
-                            break
+                click(self.udid,814,484,"the gioi")
+                for i,v in enumerate(self.index):
+                    if(i==len(self.index)-1):
+                        click(self.udid,528,476)
+                        # doubleclick(self.udid,508,477,"o so 1")
+                        delete(self.udid)
+                        sendtext(self.udid,v[0])
+                        time.sleep(1)
+                        click(self.udid,561,481)
+                        delete(self.udid)
+                        sendtext(self.udid,v[1])
+                        click(self.udid,621,480,"xac nhan")
+                        click(self.udid,621,480,"xac nhan")
+                    else:    
+                        click(self.udid,v[0],v[1])
+
                 self.dungdi()
                 time.sleep(3)
                 click(self.udid,888,29,"nutx")  
@@ -367,19 +333,14 @@ class toolLQ():
         return False
 
     def batauto(self):
-        click(self.udid,918, 263,"ngua")
-        time.sleep(3)
-        click(self.udid, 916, 216,"buff")
-        time.sleep(3)
+        click(self.udid,936,229,"ngua")
+        click(self.udid, 818, 76,"buff")
         for i in range(3):
-            click(self.udid, 864, 209,"auto")
-            time.sleep(3)
+            click(self.udid, 818, 125,"auto")
             sc=screen_capture(self.udid)
-            sc=sc[191:216,840:880]
-            if (cam(sc)==True):
-                swipe(self.udid,83,446,142,330,500)
-                time.sleep(3)
-                swipe(self.udid,83,446,83,330,500)
+            sc=sc[99:141,790:842]
+            if (find2(sc,"batauto.png")!=0):
+                print("bat auto thanh cong")
                 return True
             swipe(self.udid,83,446,142,330,500)
             time.sleep(3)
@@ -387,19 +348,16 @@ class toolLQ():
         return False
         
     def tatauto(self):
-        for i in range(4):
-            click(self.udid, 864, 209,"auto")
-            time.sleep(5)
+
+        for i in range(3):
+            click(self.udid, 818, 125,"auto")
             sc=screen_capture(self.udid)
-            
-            sc=sc[191:216,840:880]
-            if (cam(sc)==False):
-                swipe(self.udid,83,446,142,330,500)
-                time.sleep(1)
-                swipe(self.udid,83,446,83,330,500)
+            sc=sc[99:141,790:842]
+            if (find2(sc,"batauto.png")==0):
+                print("tat auto thanh cong")
                 return True
             swipe(self.udid,83,446,142,330,500)
-            time.sleep(1)
+            time.sleep(3)
             swipe(self.udid,83,446,83,330,500)
         return False
         
@@ -576,76 +534,56 @@ class toolLQ():
             return False
     def cFullRuong(self):
         for i in range(2):
-            click(self.udid,601,495,"hanhtrang")
-            time.sleep(5)
+            click(self.udid,893,180,"tui do")
             if(findFor(self.udid, 5,"hanhtrang.png",threshold=0.85,yclick=0))!=0:
                 for i in range(2):
-                    click(self.udid,787,126,"o so 1")
-                time.sleep(5)
-                sc=screen_capture(self.udid)
-                listnull=find2(sc[43:368,494:760],"otrong.png",threshold=0.75)    
-                if(listnull==0):
+                    click(self.udid,829,160,"o so 1")
+                listnull=getOHasItems(screen_capture(self.udid),1)
+                if(len(listnull)==0):
                     for i in range(2):
-                        click(self.udid,786,268,"o so 2")
-                    time.sleep(5)
-                    sc=screen_capture(self.udid)
-                    listnull=find2(sc[43:368,494:760],"otrong.png",threshold=0.75)    
-                    if(listnull==0):
-                        click(self.udid, 917, 27,"nutx")
+                        click(self.udid,825,340,"o so 2")
+                    listnull=getOHasItems(screen_capture(self.udid),2)
+                    if(len(listnull)==0):
+                        self.tatNutX()
                         return True
-                click(self.udid, 917, 27,"nutx")
+                self.tatNutX()
                 return False
         return False
     def muaTB(self):
         for i in range(2):
             self.tatauto()
-            click(self.udid, 856,110 ,"map")
-            time.sleep(5)
-            if (findFor(self.udid, 1, "dichuyen.png", 0)!= 0):
-                click(self.udid,687,19,"the gioi")
-                time.sleep(5)
-                click(self.udid,605,337,"ngu duoc")
-                time.sleep(5)
-                click(self.udid,397,314,"thai quang")
-                self.dungdi()
-                click(self.udid,814,212,"Thoai")
-                time.sleep(5)
-                if (findFor(self.udid, 1, "danhchotan.png", 1,threshold=0.85)!= 0):
-                    time.sleep(5)
-                    if (findFor(self.udid, 1, "quydoi.png", yclick=0,threshold=0.85)!= 0):
-                        click(self.udid,818,309,"scroll")
-                        time.sleep(5)
-                        click(self.udid,745,192,"quy doi")
-                        time.sleep(5)
-                        if (findFor(self.udid, 1, "dongymtb.png", yclick=1,threshold=0.85)!= 0):
-                            time.sleep(5)
-                            for i in range(3):
-                                if (findFor(self.udid, 1, "quydoi.png", yclick=0,threshold=0.85)!= 0):
-                                    click(self.udid,825 ,45,"nutx")
-                                else:
-                                    break
+            for i in range(2):
+                click(self.udid, 933,69 ,"map")
+                if (findFor(self.udid, 1, "nutx.png", 0)!= 0):
+                    time.sleep(3)
+                    click(self.udid,814,484,"the gioi")
+                    click(self.udid,406,305,"ngamy")
+                    click(self.udid,539,159,"diep tu hinh")
+                    self.dungdi()
+                    click(self.udid,723,180,"Thoai")
+                    if (findFor(self.udid, 1, "chotanthu.png", 1,threshold=0.85)!= 0):
+                        if (findFor(self.udid, 1, "hanhtrang.png", yclick=0,threshold=0.85)!= 0):
+                            click(self.udid,130,112,"thanh tam to kiem")
+                            click(self.udid,728,339,"mua")
+                            self.tatNutX()
+
                             return True
-            click(self.udid,888,29,"nutxmap")
+            self.tatNutX()
     def suDungTB(self):
         for i in range(2):
-            click(self.udid, 611,507,"hanh trang")
-            time.sleep(5)
-            click(self.udid,787,126,"o so 1")
-            time.sleep(5)
-            if (findFor(self.udid, 1, "dao.png", yclick=1,threshold=0.8)!= 0):
-                time.sleep(5)
-                if(findFor(self.udid, 1,"sudung.png",threshold=0.8,yclick=1))!=0:
-                    time.sleep(5)
-                    click(self.udid,891,29,"nutx")
-                    return True
+            click(self.udid,893,180,"tui do")
+            if(findFor(self.udid, 5,"hanhtrang.png",threshold=0.85,yclick=0))!=0:
+                for i in range(2):
+                    click(self.udid,829,160,"o so 1")                
+                if (findFor(self.udid, 1, "sudungtokiem.png", yclick=1,threshold=0.8)!= 0):
+                    if(findFor(self.udid, 1,"btnsudung.png",threshold=0.8,yclick=1))!=0:
+                        self.tatNutX()
+                        return True
             else:
-                click(self.udid,786,268,"o so 2")
-                time.sleep(5)
-                if (findFor(self.udid, 1, "dao.png", yclick=1,threshold=0.8)!= 0):
-                    time.sleep(5)
-                    if(findFor(self.udid, 1,"sudung.png",threshold=0.8,yclick=1))!=0:
-                        time.sleep(5)
-                        click(self.udid,891,29,"nutx")
+                click(self.udid,825,340,"o so 2")
+                if (findFor(self.udid, 1, "sudungtokiem.png", yclick=1,threshold=0.8)!= 0):
+                    if(findFor(self.udid, 1,"btnsudung.png",threshold=0.8,yclick=1))!=0:
+                        self.tatNutX()
                         return True
 
     def fullDo(self):                
@@ -655,12 +593,9 @@ class toolLQ():
             time.sleep(3)
         if(self.vDL()==True):
                 time.sleep(3)
-                click(self.udid,814,212,"Thoai")
-                time.sleep(5)
+                click(self.udid,723,180,"Thoai")
                 if (findFor(self.udid, 1, "hanhtrang.png", 0)!= 0):
-                    time.sleep(3)
                     if(self.bando()==True):
-                            time.sleep(3)
                         # if(self.buffmau()==True):
                             if(self.lenbai()==True):
                                     time.sleep(3)
@@ -682,8 +617,7 @@ class toolLQ():
             time.sleep(3)
         if(self.vDL()==True):
             time.sleep(3)
-            click(self.udid,814,212,"Thoai")
-            time.sleep(5)
+            click(self.udid,723,180,"Thoai")
             if (findFor(self.udid, 1, "hanhtrang.png", 0)!= 0):
                 if(self.bando()==True):
                     time.sleep(3)
@@ -713,57 +647,26 @@ class toolLQ():
             if elapsed_time >= 3600:  # 20 phút = 1200 giây
                 break
             if(elapsed_timebuff>=600):
-                click(self.udid, 916, 216,"buff")
-                time.sleep(5)
-                self.skill()
-                click(self.udid,6 ,205 )
+                click(self.udid, 818, 76,"buff")
                 timebuff=time.time()
-                # swipe(self.udid,83,446,142,330,300)
-            # self.checkhong()
-            # if(self.cFullRuong()==True):
-            #         if(findFor(self.udid, 5, "vethanh.png", 1)!= 0):
-            #             time.sleep(5)
-            #             self.dungdi()
-            #         if(self.vDL()==True):
-            #             for i in range(2):
-            #                 click(self.udid,814,212,"Thoai")
-            #                 time.sleep(5)
-            #                 if (findFor(self.udid, 5, "hanhtrang.png", 0)!= 0):
-            #                     if(self.bando()==True):
-            #                         if(self.buffmau()==True):
-            #                             if(self.lenbai()==True):
-            #                                     self.batauto() 
-            #         else:
-            #             break
             if(findFor(self.udid,1,"hongtb2.png",threshold=0.85,yclick=0))!=0:
                 if(self.hongTB()==False):
                     break
             if(findFor(self.udid, 1,"fulldo.png",threshold=0.85,yclick=0))!=0:
                 if(self.fullDo()==False):
                     break
-            
-            # elif(findFor(self.udid, 5,"hongtb.png",threshold=0.85,yclick=0))!=0:
-            #         if(self.doitb()==True):
-            #             if(self.lenbai()==True):
-            #                     self.batauto()
-            #             pass
-            #         else:
-            #             break
             elif(self.cFullRuong()==True):
                 self.fullRuong()
             else:
                 if(findFor(self.udid, 1, "vethanh.png", 1)!= 0):
                     time.sleep(5)
-                    self.dungdi()
-                    if(self.buffmau()==True):
-                        
-                        if(self.lenbai()==True):
-                                self.batauto()
-                        else:
-                            break
-                        
+                    self.dungdi()                        
+                    if(self.lenbai()==True):
+                            self.batauto()
                     else:
-                        break  
+                        break
+                        
+                   
             
             time.sleep(180)
             
@@ -771,36 +674,27 @@ class toolLQ():
     def main(self):
         while True:
             self.loadgame()
-            a=False
-            for i in range(10):
-                if (findFor(self.udid, 1, "dangnhap.png",1 )!= 0):
-                    a=True
-                    break
-                else:
-                    click(self.udid, 844,339 )
-            if(a==False):
+       
+            if (findFor(self.udid, 10, "btnvang.png",1 )== 0):
                 continue
+        
             else:
-                time.sleep(10)
-                if (findFor(self.udid, 1, "batdau.png",1 )!= 0):
-                    time.sleep(random.randint(20,60)) 
-                    findFor(self.udid,1,"roikhoi.png",threshold=0.8)
-                    # a=self.checkMap()
-                    # ck=False
-                    # if(a==1):
-                        # ck=True
-                        # pass
-                    # else:
-                    if(self.lenbai()==True):
-                            if(self.batauto()==True):
-                                self.train()
-# a=toolLQ("emulator-5554",(30))
-# # print(a.giamdinh())
-# while True:
-#     # sc=screen_capture(a.udid)
-#     # sc=sc[184:186,328:748]
-#     # print(cdo(sc))
-#     # time.sleep(5)
-#     print(a.batauto())
-#     time.sleep(5)
-    
+                time.sleep(random.randint(5,10))
+                ClickedSignIn=False
+                if(findFor(self.udid, 1, "3cid.png",1 )!= 0):
+                    time.sleep(2)
+                    if(findFor(self.udid, 1, "signin.png",1 )!= 0):
+                        ClickedSignIn=True
+                if(ClickedSignIn==False):
+                    continue
+                time.sleep(random.randint(15,30)) 
+                if(findFor(self.udid, 1, "btnvang.png",1 )== 0):
+                    continue
+                time.sleep(random.randint(15,30)) 
+                findFor(self.udid,1,"nutx.png",yclick=1,threshold=0.8)
+                if(self.lenbai()==True):
+                        if(self.batauto()==True):
+                            self.train()
+        
+# a=toolLQ("emulator-5554",((405 ,369 ),(749 ,151),( 479 ,444 ),(203 ,180)))
+# print(a.cFullRuong())
