@@ -34,6 +34,8 @@ def checkHSD(docs):
     
     if today > dateHSD:
         print("key het han")
+        logging.error("key het han")
+
         return 1
     else:
         return 0
@@ -47,6 +49,8 @@ def checkLogged(docs):
         return 2
     else:
         print("key da su dung")
+        logging.error("key da su dung")
+
         return 0
 
 def MaxDevices(docs):

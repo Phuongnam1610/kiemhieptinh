@@ -13,3 +13,6 @@ __pycache__/
 # PyInstaller
 *.manifest
 *.spec
+logs/
+release/
+screenshot.png

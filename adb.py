@@ -4,8 +4,40 @@ import numpy as np
 import imutils
 import subprocess
 import os
-import random
+import logging
+import os
 import requests,datetime
+import random
+# Tạo thư mục logs nếu chưa có
+if not os.path.exists("logs"):
+    os.makedirs("logs")
+
+# Cấu hình logging
+logging.basicConfig(
+    filename="logs/tool.log",             # File log
+    filemode="a",                         # "a" = append, "w" = ghi đè
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.DEBUG                   # Mức log tối thiểu
+)
+
+def get_cpu_id():
+    try:
+        output = subprocess.check_output('wmic cpu get ProcessorId', shell=True)
+        lines = output.decode().splitlines()
+        cpu_id = next((line.strip() for line in lines if line.strip() and "ProcessorId" not in line), None)
+        return cpu_id
+    except Exception as e:
+        raise Exception(f"Lỗi khi lấy CPU ID: {e}")
+
+def check_machine_id(blocked_id="BFEBFBFF000306A9"):
+    cpu_id = get_cpu_id()
+    print(f"CPU ID máy hiện tại: {cpu_id}")
+    logging.info(f"CPU ID máy hiện tại: {cpu_id}")
+
+    if cpu_id and cpu_id.lower() != blocked_id.lower():
+        raise Exception("Thiết bị không được phép chạy chương trình này.")
+
 def auth(key):
     """
     Authenticate user based on license key and expiration date using Google's time API
@@ -46,7 +78,7 @@ def auth(key):
         #banmoi
         license_keys = {
             "hsr": datetime.date(2025, 7, 13),
-            "qqq": datetime.date(2025, 8, 17),    # 35 days from July 13
+            "qqq": datetime.date(2025, 9, 15),    # 35 days from July 13
             "ưgj": datetime.date(2025, 9, 21),    # 35 days from Aug 17 
             "h54": datetime.date(2025, 10, 26),   # 35 days from Sept 21
             "oip": datetime.date(2025, 11, 30),   # 35 days from Oct 26
@@ -118,30 +150,40 @@ def auth(key):
         # Validate license key
         if key not in license_keys:
             print("Key không hợp lệ")
+            logging.error("Key không hợp lệ")
+
             exit()
             
         # Check if license is expired
         expiration_date = license_keys[key]
         if today.date() > expiration_date:
             print("Key đã hết hạn") 
+            logging.error("Key đã hết hạn")
+
             exit()
             
     except requests.RequestException as e:
         print(f"Lỗi kết nối internet: {e}")
+        logging.error(f"Lỗi kết nối internet: {e}")
         exit()
     except Exception as e:
         print(f"Lỗi không xác định: {e}")
+        logging.error(f"Lỗi không xác định: {e}")
         exit()
 image_path = os.path.join('image')
 def closeGame(udid,package):
     command = f"{adb} -s {udid} shell am force-stop {package}"
     os.system(command)
     print(f"{udid} đang đóng {package}")
+    logging.info(f"{udid} đang đóng {package}")
+
 
 def moGame(udid,package):
     command = f"{adb} -s {udid} shell am start -n {package}"
     os.system(command)
     print(f"{udid} đang mở {package}")
+    logging.info(f"{udid} đang mở {package}")
+
 
 def quetChuVie(img):
     #lay ra text trong anh
@@ -189,12 +231,16 @@ def keycode(udid, code):
 
 def click(udid,x,y,Tag="None"):
     print(f"{udid} vua click vao {Tag}")
+    logging.info(f"{udid} vua click vao {Tag}")
+
     command = f"{adb} -s {udid} shell input tap {x} {y}"
     os.system(command)
-    time.sleep(2)
+    time.sleep(1)
 
 def doubleclick(udid,x,y,Tag="None"):
     print(f"{udid} vua click vao {Tag}")
+    logging.info(f"{udid} vua click vao {Tag}")
+
     command = f"{adb} -s {udid} shell input tap {x} {y} && {adb} -s {udid} shell input tap {x} {y}"
     os.system(command)
     time.sleep(1)
@@ -282,6 +328,8 @@ def find2(img2, img1,udid=False,a=0,b=0,threshold=0.95):
     # cv2.destroyAllWindows()
     if(udid!=False):
         print(f'phat hien anh {img1}')
+        logging.info(f'phat hien anh {img1}')
+
         click(udid, points[0][0]+a,points[0][1]+b )
         return points
     
@@ -330,9 +378,11 @@ def check_color2(image, x, y, color, threshold):
     # Kiểm tra xem giá trị màu có nằm trong khoảng ngưỡng hay không
     if lower_color[0] <= b <= upper_color[0] and lower_color[1] <= g <= upper_color[1] and lower_color[2] <= r <= upper_color[2]:
         print("Màu được tìm thấy!")
+        logging.info("Màu được tìm thấy!")
         return 1
     else:
         print("Màu không được tìm thấy.")
+        logging.info("Màu không được tìm thấy.")
         return 0
 
 # def checkcolor(image,color,threshold):
@@ -390,25 +440,63 @@ def screen_capture(udid):
 
 #     return  rotated_image
 
+# def screen_capture(udid: str):
+#     try:
+#         # Lấy dữ liệu màn hình từ thiết bị Android
+#         result = subprocess.check_output(['adb', '-s', udid, 'exec-out', 'screencap'])
+#     except subprocess.CalledProcessError:
+#         print("❌ Lỗi khi chạy lệnh adb.")
+#         return None
+
+#     if len(result) < 12:
+#         print("❌ Dữ liệu ảnh trả về không hợp lệ.")
+#         return None
+
+#     # Đọc width, height từ 12 byte đầu
+#     width = int.from_bytes(result[0:4], byteorder='little')
+#     height = int.from_bytes(result[4:8], byteorder='little')
+#     _format = int.from_bytes(result[8:12], byteorder='little')  # thường là 1 (RGBA_8888)
+
+#     # Dữ liệu ảnh RGBA bắt đầu từ byte 12
+#     raw_img = np.frombuffer(result[12:], dtype=np.uint8).copy()
+
+#     # Chuyển thành ma trận ảnh với 4 kênh (RGBA)
+#     try:
+#         img = raw_img.reshape((height, width, 4))
+#     except ValueError:
+#         print("❌ Không reshape được ảnh. Có thể thiết bị không trả đúng dữ liệu.")
+#         return None
+
+#     # Đổi từ RGBA → BGR (bỏ kênh alpha)
+#     img_bgr = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
+
+#     return img_bgr
+
 def findTrue(udid,img='',yclick=1,time_sleep=0,threshold=0.95):
     while True:
         try:
             anh=find(udid,img,threshold=threshold)
             if(anh!=0):    
                 print(f"Phat hien anh {img}")
+                logging.info(f"Phat hien anh {img}")
+
                 if(yclick==1):
                     time.sleep(time_sleep)
                     click(udid,anh[0][0],anh[0][1])
                 return 1
             else:
+                logging.info(f"khong phat hien anh {img}")
                 print(f"khong phat hien anh {img}")
         except Exception as e:
             print(f"khong phat hien anh {img}")
+            logging.error(f"khong phat hien anh {img}")
             print("Đã xảy ra lỗi: ",e)
             return 0
 
 def findFalse(udid,n=2,img="",yclick=0):
     print(f"{udid} dang tim {img}") 
+    logging.info(f"{udid} dang tim {img}")
+
     for i in range(n):
         try:
             anh=find(udid,img)
@@ -416,6 +504,8 @@ def findFalse(udid,n=2,img="",yclick=0):
                 return 0
         except Exception as e:
             print(f"khong phat hien anh {img}",e)
+            logging.error(f"khong phat hien anh {img}")
+
     return 1
 
 
@@ -423,18 +513,23 @@ def findFalse(udid,n=2,img="",yclick=0):
 def findFor(udid,n=2,img="",yclick=1,time_sleep=0,threshold=0.9):   
     
     print(f"{udid} dang tim {img}") 
+    logging.info(f"{udid} dang tim {img}")
+
     for i in range(n):
         try:
             anh=find(udid,img,threshold)
             if(anh!=0):
+                logging.info(f"Phat hien anh {img}")
                 print(f"Phat hien anh {img}")
                 if(yclick==1):
                     time.sleep(time_sleep)
                     click(udid,anh[0][0],anh[0][1])
                     print(anh[0][0],anh[0][1])
+                    logging.info(f"Click vao {img}")
 
                 return anh
         except Exception as e:
+            logging.error(f"khong phat hien anh {img}")
             print(f"khong phat hien anh {img}",e)
     return 0
 
@@ -462,6 +557,8 @@ def get_connected_devices():
         return devices
     except Exception as e:
         print(f"Lỗi khi lấy danh sách thiết bị: {e}")
+        logging.error(f"Lỗi khi lấy danh sách thiết bị: {e}")
+
         return []
 
 
@@ -512,7 +609,7 @@ def killadb():
 def startadb():
     command = f"{adb} start-server"
     os.system(command)
-
+# check_machine_id(blocked_id="BFEBFBFF000406F1")
 setting=open('setting.txt').readlines()
 adb=setting[1].strip()
 key=setting[2].strip()

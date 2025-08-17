@@ -1,6 +1,7 @@
 from adb import *
 from bandoutils import *
 import numpy as np
+from ocr import *
 pkgame="com.blackhole.jx2mobile"
 pkgame2="com.blackhole.jx2mobile/org.cocos2dx.cpp.AppActivity"
 
@@ -42,32 +43,11 @@ def cam(img):
             
     return found
 class toolLQ():
-    def __init__(self,udid,index):
+    def __init__(self,udid,index,packtk):
         self.udid=udid    
         self.index=index
-    def test(self):
-        while True:
-            if(findFor(self.udid, 1,"fulldo.png",threshold=0.85,yclick=0))!=0:
-                if(findFor(self.udid, 1, "vethanh.png", 1)!= 0):
-                    time.sleep(5)
-                    self.dungdi()
-                if(self.vDL()==True):
-                        time.sleep(1)
-                        click(self.udid,723,180,"Thoai")
-                        time.sleep(5)
-                        if (findFor(self.udid, 1, "hanhtrang.png", 0)!= 0):
-                            if(self.bando()==True):
-                                # if(self.buffmau()==True):
-                                    if(self.lenbai()==True):
-                                            self.batauto()
-                                    else:
-                                        break
-                            else:
-                                break
-                        else:
-                            break
-                else:
-                    break
+        self.packtk=packtk
+    
 
     def loadgame(self):
         closeGame(self.udid,pkgame)
@@ -85,13 +65,17 @@ class toolLQ():
                     if(find2(sc,"loadgame.png",threshold=0.94)!=0):
                         time.sleep(5)
                         print('dang load')
+                        logging.info('dang load')           
+
                         continue
-                    sc1=sc[41:52,829:880]
+                    sc1=sc[43:62,829:899]
                     time.sleep(5)
-                    sc2=screen_capture(self.udid)[18:65,802:896]
+                    sc2=screen_capture(self.udid)[18:65,802:900]
                     
                     if(find3(sc2,sc1,threshold=0.99)!=0):
                         print('da ket thuc di chuyen')
+                        logging.info('da ket thuc di chuyen')
+
                         time.sleep(5)
                         return True
             # else:
@@ -136,7 +120,8 @@ class toolLQ():
                 findFor(self.udid, 1, "nutx.png", 1,threshold=0.85)    
     
     def vDL(self):
-        if(self.tatauto()==True):
+        for i in range(2):
+            self.tatauto()
             for i in range(2):
                 click(self.udid, 933,69 ,"map")
                 if (findFor(self.udid, 1, "nutx.png", 0)!= 0):
@@ -145,9 +130,12 @@ class toolLQ():
                     click(self.udid, 413,369,"dai ly ")
                     click(self.udid, 621, 278,"chuduocdiem")
                     self.dungdi()
-                    return True
+                    click(self.udid,723,180,"Thoai")
+                    if (findFor(self.udid, 1, "hanhtrang.png", 0)!= 0):
+                        return True
+
+            self.tatNutX()
         
-        return False
         
                     
     
@@ -210,40 +198,75 @@ class toolLQ():
             for i in (origin_list_o_so_1):
                 click(self.udid, i[1][0],i[1][1] )
                 click(self.udid, i[1][0],i[1][1] )
-                if(self.cogiuonayko()):
-                    giu_list_o_so_1.append(i)
+             
+
+                if(self.cogiuonayko(i[1][0])):
+                    logging.info(f"Giu o {i[0]}")
+
+                    print("giu o nay")
+                    print(i)
+                    giu_list_o_so_1.append(i[0])
                 click( self.udid,889,362)
             for i in range(2):
                 click(self.udid,825,340,"o so 2")
-            origin_list_o_so_2=getOHasItems(screen_capture(self.udid),1)
+            origin_list_o_so_2=getOHasItems(screen_capture(self.udid),2)
             giu_list_o_so_2=[]
             for i in (origin_list_o_so_2):
                 click(self.udid, i[1][0],i[1][1] )
-                click(self.udid, i[1][0],i[1][1] )
-                if(self.cogiuonayko()):
-                    giu_list_o_so_2.append(i)
-                click( self.udid,889,362)
-            return (loc_cac_o_can_bam(giu_list_o_so_1,1),loc_cac_o_can_bam(giu_list_o_so_2,2))
-        return False
-    def cogiuonayko(self):
-        sc=screen_capture(self.udid)
-        if(find2(sc,"giudo1.png", 0,threshold=0.8)!= 0):
-            return True
-        if(find2(sc,"giudo2.png", 0,threshold=0.8)!= 0):
-            return True
-        if(find2(sc,"giudo3.png", 0,threshold=0.8)!= 0):
-            return True
-        if(find2(sc,"giudo4.png", 0,threshold=0.8)!= 0):
-            return True
-        if(find2(sc,"giudo5.png", 0,threshold=0.8)!= 0):
-            return True
-        if(find2(sc,"phaohoa.png", 0,threshold=0.8)!= 0):
-            return True
-        if(find2(sc,"xacxuattim.png", 0,threshold=th)!= 0):
-            return True
-        if(find2(sc,"xacxuatxanh.png", 0,threshold=th)!= 0):
-            return True
+                
 
+                click(self.udid, i[1][0],i[1][1] )
+                if(self.cogiuonayko(i[1][0])):
+                    logging.info(f"Giu o {i[0]}")
+
+                    print("giu o nay")
+                    giu_list_o_so_2.append(i[0])
+                click( self.udid,889,362)
+            return (loc_cac_o_can_bam(origin_list_o_so_1,giu_list_o_so_1,1),loc_cac_o_can_bam(origin_list_o_so_2,giu_list_o_so_2,2))
+
+        return False
+    def cogiuonayko(self,tdx):
+        sc=screen_capture(self.udid)
+
+
+        # scdo=sc[18:168,366:tdx]
+        scxacxuat=sc[184:522,366:tdx]
+        # if(find2(scdo,"giudo1.png",threshold=0.7)!= 0):
+        #     print('giu do 1')
+        #     return True
+        # if(find2(scdo,"giudo2.png",threshold=0.7)!= 0):
+        #     print('giu do 2')
+        #     return True
+        # if(find2(scdo,"giudo3.png",threshold=0.7)!= 0):
+        #     print('giu do 3')
+
+        #     return True
+        # if(find2(scdo,"giudo4.png", threshold=0.7)!= 0):  
+        #     print('giu do 4')
+
+        #     return True
+        # if(find2(scdo,"giudo5.png", threshold=0.7)!= 0):
+        #     print('giu do 5')
+
+        #     return True
+        # if(find2(scdo,"phaohoa.png", threshold=0.8)!= 0):
+        #     print('giu do phao hoa')
+
+        #     return True
+        if(find2(scxacxuat,"xacxuattim.png", threshold=th)!= 0):
+            logging.info('giu do xac xuat tim')
+            return True
+        if(find2(scxacxuat,"xacxuatxanh.png", threshold=th)!= 0):
+            logging.info('giu do xac xuat xanh')
+            return True
+        if(find2(scxacxuat,"yeucauxanh.png", threshold=th)!= 0):
+            logging.info('giu do yeucau xanh')      
+            return True
+        if(find2(scxacxuat,"yeucautim.png", threshold=th)!= 0):
+            logging.info('giu do yeucau tim')
+
+            return True
+        return False
     def suachua(self):
         for i in range(2):
             click(self.udid,68,92,"sua chua")
@@ -258,9 +281,8 @@ class toolLQ():
         return False
     def bando(self):
         listcx=self.giamdinh()#tra ve cac o can bam
+        logging.info("cac o can bam %s",listcx)
         if(listcx==False):
-            return False
-        if(self.suachua()==False):
             return False
         click(self.udid, 67,202,"ban nhanh" )
         for i in range(2):
@@ -273,7 +295,12 @@ class toolLQ():
         for i in (listcx[1]):
             click(self.udid, i[0],i[1] )
             click(self.udid, i[0],i[1] )
+        click( self.udid,889,362)
+        vang=self.checkVangHon10()
         self.tatNutX()
+        if(vang==True):
+            return self.guivangthukho()
+
         return True
     def tatNutX(self):
         for i in range(5):
@@ -303,7 +330,6 @@ class toolLQ():
                         click(self.udid,v[0],v[1])
 
                 self.dungdi()
-                time.sleep(3)
                 click(self.udid,888,29,"nutx")  
                 return True
                 
@@ -337,14 +363,16 @@ class toolLQ():
         click(self.udid, 818, 76,"buff")
         for i in range(3):
             click(self.udid, 818, 125,"auto")
+            click(self.udid, 818, 125,"auto")
+            click(self.udid, 818, 125,"auto")
             sc=screen_capture(self.udid)
             sc=sc[99:141,790:842]
             if (find2(sc,"batauto.png")!=0):
-                print("bat auto thanh cong")
+                logging.info("bat auto thanh cong")
                 return True
-            swipe(self.udid,83,446,142,330,500)
-            time.sleep(3)
-            swipe(self.udid,83,446,83,330,500)
+            # swipe(self.udid,83,446,142,330,500)
+            # time.sleep(3)
+            # swipe(self.udid,83,446,83,330,500)
         return False
         
     def tatauto(self):
@@ -354,7 +382,7 @@ class toolLQ():
             sc=screen_capture(self.udid)
             sc=sc[99:141,790:842]
             if (find2(sc,"batauto.png")==0):
-                print("tat auto thanh cong")
+                logging.info("tat auto thanh cong")
                 return True
             swipe(self.udid,83,446,142,330,500)
             time.sleep(3)
@@ -386,7 +414,7 @@ class toolLQ():
             click(self.udid,754-i*45,50,f"tb {i}")
             time.sleep(1)
             if(findFor(self.udid, 3,"200.png",threshold=0.8,yclick=0))!=0:
-                print(f'thay tb so {i} hong')
+                logging.info(f'thay tb so {i} hong')
                 if(findFor(self.udid, 5,"sudung.png",threshold=0.8,yclick=1))!=0:
                     click(self.udid,909,23,"nutx")
                     time.sleep(1)
@@ -539,17 +567,44 @@ class toolLQ():
                 for i in range(2):
                     click(self.udid,829,160,"o so 1")
                 listnull=getOHasItems(screen_capture(self.udid),1)
-                if(len(listnull)==0):
+                print(' o full do so 1', len(listnull))
+                logging.info(' o full do so 1 %s', len(listnull))
+                if(len(listnull)>=30):
+                    
+
                     for i in range(2):
                         click(self.udid,825,340,"o so 2")
                     listnull=getOHasItems(screen_capture(self.udid),2)
-                    if(len(listnull)==0):
+                    print(' o full do so 2', len(listnull))
+                    logging.info(' o full do so 2 %s', len(listnull))
+                    if(len(listnull)>=20):
                         self.tatNutX()
                         return True
                 self.tatNutX()
                 return False
         return False
     def muaTB(self):
+        for i in range(2):
+            self.tatauto()
+            for i in range(2):
+                click(self.udid, 933,69 ,"map")
+                if (findFor(self.udid, 1, "nutx.png", 0)!= 0):
+                    time.sleep(3)
+                    click(self.udid,814,484,"the gioi")
+                    click(self.udid, 413,369,"dai ly ")
+                    click(self.udid,134,152,"chu tiem vu khi")
+                    self.dungdi()
+                    click(self.udid,723,180,"Thoai")
+                    if (findFor(self.udid, 1, "muavukhi.png", 1,threshold=0.85)!= 0):
+                        if (findFor(self.udid, 1, "hanhtrang.png", yclick=0,threshold=0.85)!= 0):
+                            click(self.udid,248,387,"dan")
+                            click(self.udid,728,339,"mua")
+                            self.tatNutX()
+
+                            return True
+            self.tatNutX()
+    #dành cho mua kiếm
+    def muaTBKIEM(self):
         for i in range(2):
             self.tatauto()
             for i in range(2):
@@ -572,17 +627,17 @@ class toolLQ():
     def suDungTB(self):
         for i in range(2):
             click(self.udid,893,180,"tui do")
-            if(findFor(self.udid, 5,"hanhtrang.png",threshold=0.85,yclick=0))!=0:
+            if(findFor(self.udid, 5,"hanhtrang.png",threshold=0.75,yclick=0))!=0:
                 for i in range(2):
                     click(self.udid,829,160,"o so 1")                
-                if (findFor(self.udid, 1, "sudungtokiem.png", yclick=1,threshold=0.8)!= 0):
-                    if(findFor(self.udid, 1,"btnsudung.png",threshold=0.8,yclick=1))!=0:
+                if (findFor(self.udid, 1, "sudungdan.png", yclick=1,threshold=0.7)!= 0):
+                    if(findFor(self.udid, 1,"btnsudung.png",threshold=0.65,yclick=1))!=0:
                         self.tatNutX()
                         return True
             else:
                 click(self.udid,825,340,"o so 2")
-                if (findFor(self.udid, 1, "sudungtokiem.png", yclick=1,threshold=0.8)!= 0):
-                    if(findFor(self.udid, 1,"btnsudung.png",threshold=0.8,yclick=1))!=0:
+                if (findFor(self.udid, 1, "sudungdan.png", yclick=1,threshold=0.7)!= 0):
+                    if(findFor(self.udid, 1,"btnsudung.png",threshold=0.65,yclick=1))!=0:
                         self.tatNutX()
                         return True
 
@@ -592,23 +647,15 @@ class toolLQ():
             self.dungdi()
             time.sleep(3)
         if(self.vDL()==True):
-                time.sleep(3)
-                click(self.udid,723,180,"Thoai")
-                if (findFor(self.udid, 1, "hanhtrang.png", 0)!= 0):
-                    if(self.bando()==True):
-                        # if(self.buffmau()==True):
-                            if(self.lenbai()==True):
-                                    time.sleep(3)
-                                    self.batauto()
-                                    return True
-                            else:
-                                return False
+            if(self.bando()==True):
+                    if(self.lenbai()==True):
+                            self.batauto()
+                            return True
                     else:
                         return False
-                else:
-                    return False
-        else:
-            return False
+            else:
+                return False
+              
 
     def fullRuong(self):
         if(findFor(self.udid, 1, "vethanh.png", 1)!= 0):
@@ -616,24 +663,16 @@ class toolLQ():
             self.dungdi()
             time.sleep(3)
         if(self.vDL()==True):
-            time.sleep(3)
-            click(self.udid,723,180,"Thoai")
-            if (findFor(self.udid, 1, "hanhtrang.png", 0)!= 0):
-                if(self.bando()==True):
-                    time.sleep(3)
-                            # if(self.buffmau()==True):
-                    if(self.lenbai()==True):
-                        time.sleep(3)
-                        self.batauto()
-                        return True
-                    else:
-                        return False
+            if(self.bando()==True):
+                        # if(self.buffmau()==True):
+                if(self.lenbai()==True):
+                    self.batauto()
+                    return True
                 else:
                     return False
             else:
                 return False
-        else:
-            return False
+           
     def train(self):
         start_time = time.time()
         timebuff=time.time()
@@ -669,32 +708,115 @@ class toolLQ():
                    
             
             time.sleep(180)
+    def vethukho(self):
+       
+        for i in range(2):
+            click(self.udid, 933,69 ,"map")
+            if (findFor(self.udid, 1, "nutx.png", 0)!= 0):
+                time.sleep(3)
+                click(self.udid,814,484,"the gioi")
+                click(self.udid, 413,369,"dai ly ")
+                click(self.udid, 667, 211,"thu kho")
+                self.dungdi()
+                click(self.udid,723,180,"Thoai")
+                if (findFor(self.udid, 1, "hanhtrang.png", 0)!= 0):
+                    return True
+    def checkVangHon10(self):
+        anh=screen_capture(udid=self.udid)
+        anh=anh[430:446,663:682]
+        if(getNumber(anh)>10):
+            return True
+        else:
+            return False
+
+    
+    def catvang(self):
+        for i in range(2):
+            click(self.udid,47,133,"gui vang")
+            click(self.udid,327,235,"o nhap vang")
+            sendtext(self.udid,"8")
+            if(findFor(self.udid,1,"dongy.png",threshold=0.85,yclick=1))!=0:
+               self.tatNutX()
+               return True
+        self.tatNutX()
+        return False
+           
+    def guivangthukho(self):
+            if(self.vethukho()==True):
+                return self.catvang()
+            else:
+                return False
+   
+
+
+        
+
+                
+
             
 
-    def main(self):
-        while True:
-            self.loadgame()
+    # def main(self):
+    #     while True:
+    #         self.loadgame()
        
-            if (findFor(self.udid, 10, "btnvang.png",1 )== 0):
-                continue
+    #         if (findFor(self.udid, 10, "btnvang.png",1 )== 0):
+    #             continue
         
-            else:
-                time.sleep(random.randint(5,10))
-                ClickedSignIn=False
-                if(findFor(self.udid, 1, "3cid.png",1 )!= 0):
-                    time.sleep(2)
-                    if(findFor(self.udid, 1, "signin.png",1 )!= 0):
-                        ClickedSignIn=True
-                if(ClickedSignIn==False):
-                    continue
-                time.sleep(random.randint(15,30)) 
-                if(findFor(self.udid, 1, "btnvang.png",1 )== 0):
-                    continue
-                time.sleep(random.randint(15,30)) 
-                findFor(self.udid,1,"nutx.png",yclick=1,threshold=0.8)
-                if(self.lenbai()==True):
-                        if(self.batauto()==True):
-                            self.train()
+    #         else:
+    #             time.sleep(random.randint(5,10))
+    #             ClickedSignIn=False
+    #             if(findFor(self.udid, 1, "3cid.png",1 )!= 0):
+    #                 time.sleep(2)
+    #                 doubleclick(self.udid,326,193)
+    #                 print("tk la ",self.packtk[0])
+    #                 print("mk la ",self.packtk[1])
+
+
+    #                 sendtext(self.udid,self.packtk[0])
+    #                 click(self.udid,314,246)
+    #                 doubleclick(self.udid,314,246)
+    #                 sendtext(self.udid,self.packtk[1])
+                    
+    #                 if(findFor(self.udid, 1, "signin.png",1 )!= 0):
+    #                     ClickedSignIn=True
+    #             if(ClickedSignIn==False):
+    #                 continue
+    #             time.sleep(random.randint(15,30)) 
+    #             if(findFor(self.udid, 1, "btnvang.png",1 )== 0):
+    #                 continue
+    #             time.sleep(random.randint(15,30)) 
+    #             findFor(self.udid,1,"nutx.png",yclick=1,threshold=0.8)
+    #             if(self.lenbai()==True):
+    #                     if(self.batauto()==True):
+    #                         self.train()
+    
+    def main(self):###ld9
+        try:
+            
+            while True:
+                self.loadgame()
         
-# a=toolLQ("emulator-5554",((405 ,369 ),(749 ,151),( 479 ,444 ),(203 ,180)))
-# print(a.cFullRuong())
+                if (findFor(self.udid, 10, "btnvang.png",1 )!= 0):
+                    # continue
+            
+                # else:
+                    time.sleep(random.randint(5,10))
+                    ClickedSignIn=False
+                    if(findFor(self.udid, 1, "3cidld9.png",1 )!= 0):
+                        
+                        if(findFor(self.udid, 1, "signinld9.png",1 )!= 0):
+                            ClickedSignIn=True
+                    if(ClickedSignIn==False):
+                        continue
+                    time.sleep(random.randint(15,30)) 
+                    if(findFor(self.udid, 1, "btnvang.png",1 )== 0):
+                        continue
+                    time.sleep(random.randint(15,30)) 
+                    findFor(self.udid,1,"nutx.png",yclick=1,threshold=0.8)
+                    if(self.lenbai()==True):
+                            if(self.batauto()==True):
+                                self.train()
+        except Exception as e:
+            logging.error(e)
+# a=toolLQ("emulator-5554",((405 ,369 ),(749 ,151),( 479 ,444 ),(203 ,180)),("A","B"))
+# a.train()
