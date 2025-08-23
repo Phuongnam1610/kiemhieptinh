@@ -43,10 +43,11 @@ def cam(img):
             
     return found
 class toolLQ():
-    def __init__(self,udid,index,packtk):
+    def __init__(self,udid,index,packtk,map):
         self.udid=udid    
         self.index=index
         self.packtk=packtk
+        self.map=map
     
 
     def loadgame(self):
@@ -190,6 +191,7 @@ class toolLQ():
             return False
     def giamdinh(self):
         for i in range(2):
+            swipe(self.udid,118,513,118,400,1000)
             click(self.udid,66,135,"giam dinh")
             for i in range(2):
                 click(self.udid,829,160,"o so 1")
@@ -199,7 +201,7 @@ class toolLQ():
                 click(self.udid, i[1][0],i[1][1] )
                 click(self.udid, i[1][0],i[1][1] )
              
-
+                
                 if(self.cogiuonayko(i[1][0])):
                     logging.info(f"Giu o {i[0]}")
 
@@ -227,10 +229,18 @@ class toolLQ():
         return False
     def cogiuonayko(self,tdx):
         sc=screen_capture(self.udid)
+        print(tdx)
+
+        scdo=sc[18:168,366:tdx]
+        # cv2.imwrite('testscdo.png',scdo)
+
+        scxacxuat=sc[300:450,366:tdx]
+        a=getVietnameseText(scxacxuat)
+        if(contains_required_pairs(a)==True):
+            print("check chu co do tim")
+            return True
 
 
-        # scdo=sc[18:168,366:tdx]
-        scxacxuat=sc[184:522,366:tdx]
         # if(find2(scdo,"giudo1.png",threshold=0.7)!= 0):
         #     print('giu do 1')
         #     return True
@@ -249,22 +259,32 @@ class toolLQ():
         #     print('giu do 5')
 
         #     return True
+        if(find2(scdo,"giudo6.png", threshold=0.9)!= 0):
+            print('giu do 6')
+
+            return True
+        if(find2(scdo,"giudo7.png", threshold=0.9)!= 0):
+            print('giu do 7')
+
+            return True
         # if(find2(scdo,"phaohoa.png", threshold=0.8)!= 0):
         #     print('giu do phao hoa')
 
         #     return True
-        if(find2(scxacxuat,"xacxuattim.png", threshold=th)!= 0):
-            logging.info('giu do xac xuat tim')
-            return True
-        if(find2(scxacxuat,"xacxuatxanh.png", threshold=th)!= 0):
-            logging.info('giu do xac xuat xanh')
-            return True
+        
+        # if(find2(scxacxuat,"xacxuattim.png", threshold=th)!= 0):
+        #     logging.info('giu do xac xuat tim')
+        #     return True
+        # if(find2(scxacxuat,"xacxuatxanh.png", threshold=th)!= 0):
+        #     logging.info('giu do xac xuat xanh')
+        #     return True
         if(find2(scxacxuat,"yeucauxanh.png", threshold=th)!= 0):
-            logging.info('giu do yeucau xanh')      
+            logging.info('giu do yeucau xanh')   
+            print('anh mau xanh')   
             return True
         if(find2(scxacxuat,"yeucautim.png", threshold=th)!= 0):
             logging.info('giu do yeucau tim')
-
+            print('anh mau tim')
             return True
         return False
     def suachua(self):
@@ -296,7 +316,7 @@ class toolLQ():
             click(self.udid, i[0],i[1] )
             click(self.udid, i[0],i[1] )
         click( self.udid,889,362)
-        vang=self.checkVangHon10()
+        vang=self.checkVangHon6()
         self.tatNutX()
         if(vang==True):
             return self.guivangthukho()
@@ -307,13 +327,17 @@ class toolLQ():
             if (findFor(self.udid, 1, "nutx.png", 1)==0):
                 return True
         return False
-
-    def lenbai(self):
+    def nhapMapLenBai(self):
         for i in range(2):
             click(self.udid, 933,69 ,"map")
             if (findFor(self.udid, 1, "nutx.png", 0)!= 0):
                 time.sleep(3)
-                click(self.udid,814,484,"the gioi")
+                click(self.udid,149,82,"tim map")
+                click(self.udid,129,117,"nhap ten map")
+                sendtext(self.udid,self.map)
+                time.sleep(1)
+                click(self.udid,142,153,"map dau tien")
+
                 for i,v in enumerate(self.index):
                     if(i==len(self.index)-1):
                         click(self.udid,528,476)
@@ -336,6 +360,16 @@ class toolLQ():
             time.sleep(3)
             click(self.udid,888,29,"nutx")  
         return False
+        
+    def lenbai(self):
+        
+        if(self.nhapMapLenBai()==True):
+            self.nhichNguoi() 
+            return self.nhapMapLenBai()       
+
+        
+    def nhichNguoi(self):
+        swipe(self.udid,195,412,294,334,1000)
     def skill(self):
         for i in range(3):
             if (findFor(self.udid, 1, "skill.png", 1)!= 0):
@@ -554,8 +588,7 @@ class toolLQ():
         if(self.muaTB()==True):
             if(self.suDungTB()==True):
                 if(self.lenbai()==True):
-                        self.batauto()
-                        return True
+                        return self.batauto()
             else:
                 return False
         else:
@@ -634,12 +667,12 @@ class toolLQ():
                     if(findFor(self.udid, 1,"btnsudung.png",threshold=0.65,yclick=1))!=0:
                         self.tatNutX()
                         return True
-            else:
-                click(self.udid,825,340,"o so 2")
-                if (findFor(self.udid, 1, "sudungdan.png", yclick=1,threshold=0.7)!= 0):
-                    if(findFor(self.udid, 1,"btnsudung.png",threshold=0.65,yclick=1))!=0:
-                        self.tatNutX()
-                        return True
+                else:
+                    click(self.udid,825,340,"o so 2")
+                    if (findFor(self.udid, 1, "sudungdan.png", yclick=1,threshold=0.7)!= 0):
+                        if(findFor(self.udid, 1,"btnsudung.png",threshold=0.65,yclick=1))!=0:
+                            self.tatNutX()
+                            return True
 
     def fullDo(self):                
         if(findFor(self.udid, 1, "vethanh.png", 1)!= 0):
@@ -649,8 +682,8 @@ class toolLQ():
         if(self.vDL()==True):
             if(self.bando()==True):
                     if(self.lenbai()==True):
-                            self.batauto()
-                            return True
+                            return self.batauto()
+                            
                     else:
                         return False
             else:
@@ -666,8 +699,7 @@ class toolLQ():
             if(self.bando()==True):
                         # if(self.buffmau()==True):
                 if(self.lenbai()==True):
-                    self.batauto()
-                    return True
+                    return self.batauto()
                 else:
                     return False
             else:
@@ -701,7 +733,7 @@ class toolLQ():
                     time.sleep(5)
                     self.dungdi()                        
                     if(self.lenbai()==True):
-                            self.batauto()
+                            return self.batauto()
                     else:
                         break
                         
@@ -721,10 +753,13 @@ class toolLQ():
                 click(self.udid,723,180,"Thoai")
                 if (findFor(self.udid, 1, "hanhtrang.png", 0)!= 0):
                     return True
-    def checkVangHon10(self):
+    def checkVangHon6(self):
         anh=screen_capture(udid=self.udid)
         anh=anh[430:446,663:682]
-        if(getNumber(anh)>10):
+        a=getNumber(anh)
+        if(a>6):
+            print(a)
+
             return True
         else:
             return False
@@ -734,7 +769,7 @@ class toolLQ():
         for i in range(2):
             click(self.udid,47,133,"gui vang")
             click(self.udid,327,235,"o nhap vang")
-            sendtext(self.udid,"8")
+            sendtext(self.udid,"4")
             if(findFor(self.udid,1,"dongy.png",threshold=0.85,yclick=1))!=0:
                self.tatNutX()
                return True
@@ -818,5 +853,5 @@ class toolLQ():
                                 self.train()
         except Exception as e:
             logging.error(e)
-# a=toolLQ("emulator-5554",((405 ,369 ),(749 ,151),( 479 ,444 ),(203 ,180)),("A","B"))
-# a.train()
+# a=toolLQ("emulator-5554",((405 ,369 ),(749 ,151),( 479 ,444 ),(203 ,180)),("A","B"),"tr")
+# a.giamdinh()
